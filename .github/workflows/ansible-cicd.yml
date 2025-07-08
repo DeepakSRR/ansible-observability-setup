@@ -1,15 +1,6 @@
-name: 🔁 Ansible CI/CD for Grafana
-
-on:
-  push:
-    branches:
-      - main
-  pull_request:
-
 jobs:
   deploy:
     runs-on: self-hosted
-
     steps:
       - name: 📥 Checkout code
         uses: actions/checkout@v3
