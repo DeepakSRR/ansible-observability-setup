@@ -1,8 +1,7 @@
-deepak_sin@LP1-AP-52217668:/mnt/c/Users/deepak_sin/ansible-grafana-zipkin-poc/ansible$ cat README.md
-cat << 'EOF' > README.md
-# 🛠️ Ansible + Grafana + Prometheus Observability Setup
+cat > README.md <<'EOF'
+# 📊 Ansible + Grafana + Prometheus Automation
 
-This project automates the setup of **Grafana** with a Prometheus data source and a pre-configured dashboard using **Ansible**. It runs smoothly in a **WSL + Docker Compose** environment.
+This repository automates the setup of a Grafana dashboard with Prometheus as a data source using **Ansible**.
 
 ---
 
@@ -10,15 +9,15 @@ This project automates the setup of **Grafana** with a Prometheus data source an
 
 \`\`\`
 .
-├── grafana.yml                   # Main Ansible playbook
+├── grafana.yml                      # Main Ansible playbook
 ├── files/
-│   └── dashboard.json            # Grafana dashboard definition
+│   └── dashboard.json              # Grafana dashboard definition
 ├── roles/
 │   └── grafana/
 │       ├── defaults/
-│       │   └── main.yml          # Default variables
+│       │   └── main.yml            # Default variables
 │       └── tasks/
-│           └── main.yml          # Main tasks to run
+│           └── main.yml           # Main tasks to run
 └── .gitignore
 \`\`\`
 
@@ -42,19 +41,9 @@ ansible-playbook grafana.yml
 
 This will:
 
-- ✅ Wait for Grafana to be healthy
-- ✅ Check/create Prometheus data source
-- ✅ Import the dashboard defined in \`files/dashboard.json\`
-
----
-
-## 📊 Customize the Dashboard
-
-1. Open Grafana UI
-2. Create or edit a dashboard
-3. Click "Share" → Export → Save to JSON
-4. Replace \`files/dashboard.json\` with your version
-5. Rerun the playbook
+✅ Wait for Grafana to be healthy  
+✅ Check/create Prometheus data source  
+✅ Import the dashboard defined in \`files/dashboard.json\`
 
 ---
 
@@ -68,7 +57,7 @@ This will:
 
 ## 📌 Author
 
-Made by **Deepak Singh**
+Made by **Deepak Singh**  
 🔗 GitHub: [https://github.com/DeepakSRR](https://github.com/DeepakSRR)
 
 ---
@@ -79,4 +68,5 @@ MIT License
 EOF
 
 git add README.md
-git commit -m "📝 Final clean README with Bash-safe formatting"
+git commit -m "📝 Final README with Bash-safe formatting and directory tree"
+git push origin main
