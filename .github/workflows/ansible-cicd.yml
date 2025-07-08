@@ -1,0 +1,25 @@
+name: 🔁 Ansible CI/CD for Grafana
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 📥 Checkout code
+        uses: actions/checkout@v3
+
+      - name: ⚙️ Install Ansible
+        run: |
+          sudo apt update
+          sudo apt install -y python3-pip
+          pip3 install ansible
+
+      - name: ▶️ Run Ansible playbook
+        run: |
+          ansible-playbook grafana.yml -e "grafana_host=localhost grafana_port=3001 grafana_admin_user=admin grafana_admin_password=admin"
