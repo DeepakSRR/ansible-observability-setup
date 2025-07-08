@@ -1,0 +1,81 @@
+---
+# roles/grafana/tasks/main.yml
+
+- name: Verify Grafana API is reachable
+  uri:
+    url: "http://{{ grafana_host }}:{{ grafana_port }}/api/health"
+    method: GET
+    status_code: 200
+    timeout: 10
+  register: grafana_health
+  until: grafana_health.status == 200
+  retries: 5
+  delay: 5
+
+- name: Check if Prometheus datasource exists
+  uri:
+    url: "http://{{ grafana_host }}:{{ grafana_port }}/api/datasources/name/Prometheus"
+    method: GET
+    user: "{{ grafana_admin_user }}"
+    password: "{{ grafana_admin_password }}"
+    force_basic_auth: yes
+  register: datasource_check
+  ignore_errors: yes
+  changed_when: false
+
+- name: Create Prometheus datasource (if missing)
+  uri:
+    url: "http://{{ grafana_host }}:{{ grafana_port }}/api/datasources"
+    method: POST
+    headers:
+      Content-Type: "application/json"
+    body: |
+      {
+        "name": "Prometheus",
+        "type": "prometheus",
+        "url": "http://prometheus:9090",
+        "access": "proxy",
+        "isDefault": true,
+        "jsonData": {
+          "timeInterval": "15s"
+        }
+      }
+    body_format: json
+    user: "{{ grafana_admin_user }}"
+    password: "{{ grafana_admin_password }}"
+    force_basic_auth: yes
+    status_code: 200
+  when: datasource_check.status == 404
+  register: datasource_creation
+
+- name: Import dashboard
+  uri:
+    url: "http://{{ grafana_host }}:{{ grafana_port }}/api/dashboards/db"
+    method: POST
+    headers:
+      Content-Type: "application/json"
+    body: |
+      {
+        "dashboard": {{ lookup('file', 'files/dashboard.json') | from_json }},
+        "folderId": 0,
+        "overwrite": true,
+        "inputs": [
+          {
+            "name": "DS_PROMETHEUS",
+            "type": "datasource",
+            "pluginId": "prometheus",
+            "value": "Prometheus"
+          }
+        ]
+      }
+    body_format: json
+    user: "{{ grafana_admin_user }}"
+    password: "{{ grafana_admin_password }}"
+    force_basic_auth: yes
+    status_code: 200
+  register: dashboard_import
+
+- name: Show import results
+  debug:
+    msg: "✅ Dashboard imported at http://{{ grafana_host }}:{{ grafana_port }}{{ dashboard_import.json.url }}"
+  when: dashboard_import.status == 200

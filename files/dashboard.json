@@ -1,0 +1,83 @@
+{
+  "id": null,
+  "uid": "prometheus-ansible",
+  "title": "System Metrics - Prometheus (Ansible Imported)",
+  "timezone": "browser",
+  "schemaVersion": 30,
+  "version": 1,
+  "refresh": "5s",
+  "panels": [
+    {
+      "type": "graph",
+      "title": "CPU Usage (1m avg)",
+      "datasource": "${DS_PROMETHEUS}",
+      "targets": [
+        {
+          "expr": "100 - (avg by (instance) (rate(node_cpu_seconds_total{mode=\"idle\"}[1m])) * 100)",
+          "legendFormat": "{{instance}}",
+          "refId": "A"
+        }
+      ],
+      "yaxes": [
+        {
+          "format": "percent",
+          "label": "CPU",
+          "logBase": 1,
+          "min": 0,
+          "max": 100
+        },
+        {
+          "show": false
+        }
+      ]
+    },
+    {
+      "type": "graph",
+      "title": "Memory Usage",
+      "datasource": "${DS_PROMETHEUS}",
+      "targets": [
+        {
+          "expr": "100 * (1 - (node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes))",
+          "legendFormat": "{{instance}}",
+          "refId": "A"
+        }
+      ],
+      "yaxes": [
+        {
+          "format": "percent",
+          "label": "Memory",
+          "logBase": 1,
+          "min": 0,
+          "max": 100
+        },
+        {
+          "show": false
+        }
+      ]
+    },
+    {
+      "type": "stat",
+      "title": "System Uptime (Seconds)",
+      "datasource": "${DS_PROMETHEUS}",
+      "targets": [
+        {
+          "expr": "node_time_seconds - node_boot_time_seconds",
+          "refId": "A"
+        }
+      ],
+      "colorMode": "value",
+      "graphMode": "none",
+      "justifyMode": "center"
+    }
+  ],
+  "templating": {
+    "list": [
+      {
+        "name": "DS_PROMETHEUS",
+        "type": "datasource",
+        "pluginId": "prometheus",
+        "query": "prometheus"
+      }
+    ]
+  }
+}

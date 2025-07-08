@@ -1,0 +1,7 @@
+---
+# grafana.yml
+- hosts: localhost
+  roles:
+    - role: grafana
+  vars:
+    grafana_dashboard_json: "{{ lookup('file', 'files/dashboard.json') }}"

@@ -1,0 +1,15 @@
+# OS files
+.DS_Store
+Thumbs.db
+
+# Python/Ansible
+__pycache__/
+*.retry
+*.vault
+
+# Logs
+*.log
+
+# Editors
+.vscode/
+*.code-workspace
